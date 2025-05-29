@@ -3,3 +3,5 @@ jupyter
 numpy
 # erebusfall # simple delta O18 correction
 bayfox # foraminifera calibration https://github.com/brews/bayfox
+nbdime
+nbstripout
