@@ -10,22 +10,21 @@ authors = [
 description='Proxy data calibration for the LGM'
 readme = "README.md"
 requires-python = ">=3.9"
-version = "0.1.0"
-license = {text = "MIT"}
+license-files= [ "LICENSE" ]
 
-# dynamic = ["version", "dependencies"]
-dynamic = ["dependencies"]
-
-[tool.setuptools.dynamic]
-dependencies =  {file = ["requirements.txt"]}
-
-# [project.optional-dependencies]
+dynamic = ["version", "dependencies"]
 
 [project.urls]
 homepage = "https://github.com/perrette/lgmproxies"
 
 # [tool.setuptools_scm]
 # write_to = "lgmproxies/_version.py"
+
+[tool.setuptools.dynamic]
+dependencies =  {file = ["requirements.txt"]}
+
+[tool.setuptools_scm]
+write_to = "lgmproxies/_version.py"
 
 [tool.setuptools.packages.find]
 where = ["."]
@@ -38,6 +37,3 @@ lgmproxies = ["**/*"]
 
 # [project.scripts]
 # lgmproxies = "lgmproxies.__main__:main"
-# lgmproxies-countries = "lgmproxies.geography:main"
-# lgmproxies-sync = "lgmproxies.backends.s3:main"
-# lgmproxies-post = "lgmproxies.postproc:main"
