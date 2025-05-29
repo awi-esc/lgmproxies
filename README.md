@@ -7,10 +7,16 @@ Below we hightlight some results from [notebooks/play.ipynb](notebooks/play.ipyn
 ![Tierney calibration](images/tierney_calibration.png)
 
 ## UK37
-
-Using the simple Mueller et al formula from Chat GPT:
 ![UK37](images/uk37_calibration.png)
 
+## Tex 86
+![Tex86](images/tex86_calibration.png)
+
+## $\Delta^{18}O$
+![$\Delta^{18}O$](images/delo_calibration.png)
+
+## Mg / Ca
+![Mg / Ca](images/mg_calibration.png)
 
 ## External resources:
 
