@@ -1,9 +1,6 @@
 from pathlib import Path
-import urllib
-import subprocess as sp
-import urllib.parse
 from lgmproxies.logs import logger
-from lgmproxies.config import get_datapath
+from lgmproxies.datasets.manager import get_repo_path
 
 TIERNEY_REPOS = [
     "jesstierney/BAYSPLINE",
@@ -14,3 +11,5 @@ TIERNEY_REPOS = [
     # "brews/erebusfall", # d18O correction adapted from Tierney al 2017 https://doi.org/10.1130/G39457.1: pypi
     "brews/d18oc_sst", # d18O correction from Malevich et al 2019 https://doi.org/10.1029/2019PA003576
     ]
+
+
