@@ -1,3 +1,4 @@
 pandas
 jupyter
 numpy
+erebusfall # simple delta O18 correction
