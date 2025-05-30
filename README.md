@@ -18,7 +18,8 @@ Below we try to match Tierney et al results. I'll update the figs below as I mak
 ![Tex86](images/tex86_calibration.png)
 
 ### $\Delta^{18}O$
-![$\Delta^{18}O$](images/delo_calibration.png)
+![$\Delta^{18}O$](images/delo_calibration_overview.png)
+See also [species-specific subplots with error bars](images/delo_calibration.png).
 
 ### Mg / Ca
 ![Mg / Ca](images/mg_calibration.png)
