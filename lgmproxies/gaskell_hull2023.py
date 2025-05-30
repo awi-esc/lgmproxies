@@ -62,7 +62,8 @@ co3_options = [
     "none", "sosd"
 ]
 
-cachefile = get_datapath("gaskell_hull2023_cache.pkl")
+legacy_cachefile = get_datapath("gaskell_hull2023_cache.pkl")
+cachedir = get_datapath("gaskell_hull2023")
 
 def hash_dataframe(df):
     """
@@ -71,25 +72,40 @@ def hash_dataframe(df):
     df_bytes = pd.util.hash_pandas_object(df, index=True).values.tobytes()
     return hashlib.sha256(df_bytes).hexdigest()
 
+def get_file_path(key):
+    """
+    Generate a file path for the cached DataFrame based on its hash.
+    """
+    filename = "cache_" + hashlib.sha256(str(key).encode()).hexdigest() + ".csv"
+    return cachedir / filename
+
 def cached(func):
     """
     Decorator to cache the results of the function.
     """
-    if cachefile.exists():
-        with open(cachefile, 'rb') as f:
+    if legacy_cachefile.exists():
+        with open(legacy_cachefile, 'rb') as f:
             cache = pickle.load(f)
-    else:
-        cache = {}
+            for k in cache:
+                df = cache[k]
+                # Create a safe filename from the key
+                filepath = get_file_path(k)
+                print("Migrating cache for key:", k, "to file:", filepath)
+                filepath.parent.mkdir(parents=True, exist_ok=True)
+                df.to_csv(filepath, index=False)
+                df[k] = filepath
+        legacy_cachefile.unlink()  # Remove old cache file
 
     def wrapper(df_input, *args, **kwargs):
         df_hash = hash_dataframe(df_input)
         key = (df_hash, args, frozenset(kwargs.items()))
-        if key not in cache:
+        filepath = get_file_path(key)
+        if not filepath.exists():
             result = func(df_input.copy(), *args, **kwargs)
-            cache[key] = result
-            with open(cachefile, 'wb') as f:
-                pickle.dump(cache, f)
-        return cache[key]
+            filepath.parent.mkdir(parents=True, exist_ok=True)
+            result.to_csv(filepath, index=False)
+            return result
+        return pd.read_csv(filepath)
 
     return wrapper
 
