@@ -4,6 +4,7 @@ import subprocess as sp
 import urllib.parse
 from lgmproxies.logs import logger
 from lgmproxies.config import get_datapath
+from lgmproxies.datasets.datamanager import register_dataset, require_dataset, download
 
 
 def get_repo_path(repo_url: str) -> Path:
@@ -72,14 +73,26 @@ def main():
     """
     import argparse
     from lgmproxies.datasets.tierney import TIERNEY_REPOS
+    import lgmproxies.datasets.catalogue # register datasets into DATASET_REGISTER
+    from lgmproxies.datasets.datamanager import (
+        DATASET_REGISTER,
+        expand_names,
+        download_by_names)
+
     ALL_REPOS = TIERNEY_REPOS
+    ALL_DATASETS = [r['name'] for r in DATASET_REGISTER['records']]
 
     parser = argparse.ArgumentParser(description="Download datasets.")
     parser.add_argument("--update", action="store_true", help="Update existing repositories instead of cloning them again.")
     parser.add_argument("--repos", nargs='*', default=ALL_REPOS, help="List of repositories to download. Defaults to all repositories: %(default)s")
+    parser.add_argument("--datasets", nargs='*', default=ALL_DATASETS, help="List of repositories to download. Defaults to all repositories: %(default)s")
+    parser.add_argument("--force", action="store_true", help="Force download of datasets even if they already exist.")
     args = parser.parse_args()
 
     download_repositories(args.repos, update=args.update)
+
+    expanded_names = expand_names(args.datasets)
+    download_by_names(expanded_names, force_download=args.force)
 
 if __name__ == "__main__":
     main()

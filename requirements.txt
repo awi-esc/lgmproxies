@@ -1,6 +1,11 @@
 pandas
+fiona
+shapely
 jupyter
 numpy
+pymc
+cloudpickle
+tqdm
 # erebusfall # simple delta O18 correction
 bayfox # foraminifera calibration https://github.com/brews/bayfox
 nbdime

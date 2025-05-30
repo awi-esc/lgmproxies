@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 import lgmproxies
 
-def get_xdg_cache_dir():
+def get_xdg_cache_dir() -> Path:
     # Check if XDG_CACHE_HOME is set
     xdg_cache_home = os.environ.get('XDG_CACHE_HOME')
 
@@ -19,11 +19,11 @@ def create_cache_dir():
     # Create the cache directory if it doesn't exist
     CACHE.mkdir(parents=True, exist_ok=True)
 
-def get_datapath(name: str | Path):
+def get_datapath(name: str | Path="") -> Path:
     return CACHE / Path(name)
 
-def get_figpath(name: str | Path):
+def get_figpath(name: str | Path="") -> Path:
     return Path("figures")/ name
 
-def get_repo(name: str | Path=""):
+def get_repo(name: str | Path="") -> Path:
     return Path(PACKAGE_DIR) / name
