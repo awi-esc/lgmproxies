@@ -5,8 +5,11 @@ jupyter
 numpy
 pymc
 cloudpickle
+requests
 tqdm
 # erebusfall # simple delta O18 correction
 bayfox # foraminifera calibration https://github.com/brews/bayfox
+bs4
+lxml
 nbdime
 nbstripout
