@@ -9,7 +9,7 @@ Below we hightlight some results from [notebooks/play.ipynb](notebooks/play.ipyn
 
 ## Proxy-specific results
 
-Below we try to match Tierney et al results with simple formula (chat GPT for overview for the first round.)
+Below we try to match Tierney et al results. I'll update the figs below as I make progress, dropping irrelevant results to keep the figures clear (started with simple formula from chat GPT overview, now Gaskell and Hull (2023) for d18O, soonish hierarchical Bayfox in pymc)
 
 ### UK37
 ![UK37](images/uk37_calibration.png)
