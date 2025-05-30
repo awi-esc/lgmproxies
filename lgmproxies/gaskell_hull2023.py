@@ -10,9 +10,20 @@ import pickle
 from lgmproxies.datasets.manager import get_datapath
 
 calibration_options = [
-    "bayfox_pooled", "kim_oneil", "epstein", "grossman", "bemis",
-    "marchitto", "anand", "elderfield", "gaskell"
+    "bayfox_pooled",
+    "bayfox_ruber",
+    "bayfox_bulloides",
+    "bayfox_globigerina",
+    "kim_oneil",
+    "epstein",
+    "grossman",
+    "bemis",
+    "marchitto",
+    "anand",
+    "elderfield",
+    "gaskell"
 ]
+
 
 timescale_options = [
     "GTS2020", "GTS2012", "LR04", "LR09", "CENOGRID", "Probstack"
@@ -26,14 +37,21 @@ spatial_options = [
     "none", "gaskell_poly", "legrande_mixed", "legrande_0m", "legrande_50m",
     "legrande_100m", "legrande_200m", "legrande_500m", "legrande_1000m",
     "legrande_1500m", "legrande_2000m", "legrande_3000m", "legrande_4000m",
-    "legrande_5000m", "tierney_lateholocene", "tierney_lgm", "zachos",
+    "legrande_5000m", "tierney_lateholocene", "tierney_lastglaciermaximum", "zachos",
     "hollis", "gaskell_lat"
 ]
 
 benthic_options = [
-    "none", "fixed", "cramer_s4", "cramer_s5", "cramer_s6",
-    "cramer_s4_smooth", "cramer_s5_smooth", "cramer_s6_smooth",
-    "meckler", "miller", "rohling_cenogrid", "rohling_lr04"
+    "none", "fixed",
+    "cramer1", "cramer2", "cramer3",
+    "cramer1s", "cramer2s", "cramer3s",
+    # "cramer_s4", "cramer_s5", "cramer_s6",
+    # "cramer_s4_smooth", "cramer_s5_smooth", "cramer_s6_smooth",
+    # "meckler", "miller", "rohling_cenogrid", "rohling_lr04"
+    "meckler",
+    "miller",
+    "rohling1",  # Rohling et al. 2021 CENOGRID (0-40 Ma, SL-d18O)
+    "rohling2", #  Rohling et al. 2021 LR04 (0-5.3 Ma, SL-d18O)
 ]
 
 co3_options = [
@@ -122,6 +140,22 @@ def convert_d18o_df(
         'benthic': benthic,
         'co3': co3,
     }
+
+    # validate options
+    if calibration not in calibration_options:
+        raise ValueError(f"Invalid calibration option: {calibration}. Must be one of {calibration_options}")
+    if timescale not in timescale_options:
+        raise ValueError(f"Invalid timescale option: {timescale}. Must be one of {timescale_options}")
+    if ice not in ice_options:
+        raise ValueError(f"Invalid ice option: {ice}. Must be one of {ice_options}")
+    if latlong not in ['none', 'latlong']:
+        raise ValueError(f"Invalid latlong option: {latlong}. Must be 'none' or 'latlong'")
+    if spatial not in spatial_options:
+        raise ValueError(f"Invalid spatial option: {spatial}. Must be one of {spatial_options}")
+    if benthic not in benthic_options:
+        raise ValueError(f"Invalid benthic option: {benthic}. Must be one of {benthic_options}")
+    if co3 not in co3_options:
+        raise ValueError(f"Invalid co3 option: {co3}. Must be one of {co3_options}")
 
     url = "https://research.peabody.yale.edu/d180/proxy.php"
     response = requests.post(url, files=files, data=data)
