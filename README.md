@@ -17,12 +17,32 @@ Below we try to match Tierney et al results. I'll update the figs below as I mak
 ### Tex 86
 ![Tex86](images/tex86_calibration.png)
 
-### $\Delta^{18}O$
+### $\delta^{18}O$
 ![$\Delta^{18}O$](images/delo_calibration_overview.png)
 See also [species-specific subplots with error bars](images/delo_calibration.png).
 
 ### Mg / Ca
 ![Mg / Ca](images/mg_calibration.png)
+
+## Sea-water $\delta^{18}O$
+
+There is a tool (Gaskell and Hull 2023):
+- github: https://github.com/danielgaskell/d18Oconverter
+- tool: https://research.peabody.yale.edu/d180/index.html
+- paper: https://cp.copernicus.org/articles/19/1265/2023
+
+That claims to take latitude + age as input and return delta O 18
+But unless I'm mistaken, the results are pretty different from (probably correct) Malevich et al (2019):
+
+- github: https://github.com/brews/d18oc_sst
+- paper: https://doi.org/10.1029/2019pa003576
+
+despite the claim they also based their calculation on Malevitch et al. Perhaps I did something wrong...
+
+![](images/d18osw_comparison.png)
+![](images/d18osw_comparison_scatter.png)
+
+At least the resulting temperature is correlated.
 
 ## External resources:
 
