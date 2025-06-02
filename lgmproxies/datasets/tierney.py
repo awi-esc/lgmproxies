@@ -1,8 +1,10 @@
 from pathlib import Path
+import pandas as pd
 import cloudpickle as cp
 import numpy as np
 import pymc as pm
 import arviz as az
+from scipy.interpolate import NearestNDInterpolator
 from lgmproxies.logs import logger
 from lgmproxies.datasets.manager import get_repo_path
 
@@ -42,15 +44,39 @@ class DeltaO18:
         trace = az.from_netcdf(trace_path)
         return cls(model, trace)
 
-    def to_sst(self, delta_o18: np.ndarray, delta_o18_sw: np.ndarray, seed: int=345) -> np.ndarray:
-
+    def to_sst(self, delta_o18: np.ndarray, delta_o18_sw: np.ndarray, seed: int=345, rng=None) -> np.ndarray:
+        if rng is None:
+            rng = np.random.default_rng(seed)
         a = self.trace.posterior["a"].values.flatten()
         b = self.trace.posterior["b"].values.flatten()
         tau = self.trace.posterior["tau"].values.flatten()
         # d18oc_est = a + b * temp + (d18osw - 0.27) + N(0, tau)
         # -> temp = (delta_o18 - N(0, tau) - delta_o18_sw + 0.27) / b
-        temp = (delta_o18 - delta_o18_sw + 0.27) / b[:, None] + a[:, None]
+        temp = (delta_o18 - a[:, None] - delta_o18_sw + 0.27) / b[:, None]
         # Add uncertainty from tau
-        temp_err = np.random.normal(0, (tau/b)[:, None], size=temp.shape, seed=seed)
+        temp_err = rng.normal(0, (tau/np.abs(b))[:, None], size=temp.shape)
 
         return temp + temp_err
+
+
+class DeloSWMalevitch:
+    def __init__(self):
+        repo = get_repo_path("brews/d18oc_sst")
+        self.coretops_raw = pd.read_csv(repo/"data/parsed/coretops.csv")
+        self.coretops_grid = pd.read_csv(repo/"data/parsed/coretops_grid.csv")
+
+        # Combine latitude and longitude into a single array of coordinates
+        # Extract latitude, longitude, and d18osw values
+        data = self.coretops_grid
+        latitudes = data['gridlat'].values
+        longitudes = data['gridlon'].values
+        d18osw_values = data['d18osw'].values
+        points = np.column_stack((latitudes, longitudes))
+
+        # Create the nearest neighbor interpolator
+        self.interpolator = NearestNDInterpolator(points, d18osw_values)
+
+    def interpolate(self, longitude: float, latitude: float) -> float:
+        # Example: Predict d18osw value at a new point
+        new_point = np.array([latitude, longitude]).T  # Replace with actual values
+        return self.interpolator(new_point)

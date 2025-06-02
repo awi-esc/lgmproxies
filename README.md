@@ -9,7 +9,7 @@ Below we hightlight some results from [notebooks/play.ipynb](notebooks/play.ipyn
 
 ## Proxy-specific results
 
-Below we try to match Tierney et al results. I'll update the figs below as I make progress, dropping irrelevant results to keep the figures clear (started with simple formula from chat GPT overview, now Gaskell and Hull (2023) for d18O, soonish hierarchical Bayfox in pymc)
+Below we try to match Tierney et al results. I'll update the figs below as I make progress, dropping irrelevant results to keep the figures clear.
 
 ### UK37
 ![UK37](images/uk37_calibration.png)
@@ -18,6 +18,8 @@ Below we try to match Tierney et al results. I'll update the figs below as I mak
 ![Tex86](images/tex86_calibration.png)
 
 ### $\delta^{18}O$
+
+ After failing to get anything interesting with Gaskell and Hull (2023), I now use pooled bayfox with brews/d18oc_sst for d18O. Caveat: these results use present-day deltaO18 !
 ![$\Delta^{18}O$](images/delo_calibration_overview.png)
 See also [species-specific subplots with error bars](images/delo_calibration.png).
 
