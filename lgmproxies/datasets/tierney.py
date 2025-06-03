@@ -29,7 +29,7 @@ class DeltaO18:
         self.trace = trace
 
     @classmethod
-    def load(cls, model_path: str | Path, trace_path: str | Path):
+    def load(cls, model_path: str | Path, trace_path: str | Path, **kwargs) -> "DeltaO18":
         """
         Load a DeltaO18 model and its trace from specified paths.
 
@@ -42,7 +42,7 @@ class DeltaO18:
         """
         model = cp.load(open(model_path, "rb"))
         trace = az.from_netcdf(trace_path)
-        return cls(model, trace)
+        return cls(model, trace, **kwargs)
 
     def to_sst(self, delta_o18: np.ndarray, delta_o18_sw: np.ndarray, seed: int=345, rng=None) -> np.ndarray:
         if rng is None:
@@ -57,6 +57,61 @@ class DeltaO18:
         temp_err = rng.normal(0, (tau/np.abs(b))[:, None], size=temp.shape)
 
         return temp + temp_err
+
+
+CATEGORIES = ["bulloides", "ruber", "incompta", "pachy", "sacculifer"]
+
+class DeltaO18Hierarchical(DeltaO18):
+    def __init__(self, model: pm.Model, trace: az.InferenceData, categories: list[str] = CATEGORIES):
+        """
+        Initialize the DeltaO18Hierarchical class.
+
+        Args:
+            model (pm.Model): The PyMC model.
+            trace (az.InferenceData): The ArviZ trace data.
+            categories (list[str]): List of species categories.
+        """
+        super().__init__(model, trace)
+        if categories is None:
+            categories = CATEGORIES
+        self.categories = categories
+
+    def to_sst(self, delta_o18: np.ndarray,
+               species: np.ndarray, delta_o18_sw: np.ndarray,
+               seed: int = 345, rng=None) -> np.ndarray:
+        """
+        delta_o18: 1D array of delta O-18 values for each sample
+        species: 1D array of species names corresponding to each delta O-18 value
+        supported names are: "ruber", "bulloides", "pachy", "sacculifer", "incompta"
+
+        The dataset was originally used in Malevitch et al. 2019 with names:
+foramtype
+G. bulloides     291 -> 0 - "bulloides"
+G. ruber         489 -> 1 - "ruber"
+N. incompta       90 -> 2 - "incompta"
+N. pachyderma    273 -> 3 - "pachy"
+T. sacculifer    243 -> 4 - "sacculifer"
+Name: count, dtype: int64
+"""
+        if not species.dtype.kind == "i":
+            species = np.asarray([self.categories.index(s) for s in species])
+        if rng is None:
+            rng = np.random.default_rng(seed)
+        post = az.extract(self.trace.posterior)
+        a = post["a"].values
+        assert a.ndim == 2, f"Expected a to be 2D (samples, species). Got {a.ndim}D: {a.shape}"
+        b = post["b"].values
+        tau = post["tau"].values
+        # d18oc_est = a + b * temp + (d18osw - 0.27) + N(0, tau)
+        # -> temp = (delta_o18 - N(0, tau) - delta_o18_sw + 0.27) / b
+        temp = (delta_o18 - a[:, species] - delta_o18_sw + 0.27) / b[:, species]
+        # Add uncertainty from tau
+        temp_err = rng.normal(0, (tau/np.abs(b))[:, species], size=temp.shape)
+
+        return temp + temp_err
+
+
+
 
 
 class DeloSWMalevitch:

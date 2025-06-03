@@ -19,7 +19,7 @@ Below we try to match Tierney et al results. I'll update the figs below as I mak
 
 ### $\delta^{18}O$
 
- After failing to get anything interesting with Gaskell and Hull (2023), I now use pooled bayfox with brews/d18oc_sst for d18O. Caveat: these results use present-day deltaO18 !
+ After failing to get anything interesting with Gaskell and Hull (2023), I now use pooled bayfox with brews/d18oc_sst for d18O. Caveat: these results use present-day deltaO18 (--> only the late Holocene panel makes sense) ! I also added the hierarchical (species-specific), annual model but the results differ much more from the CSV file provided by Tierney et al.
 ![$\Delta^{18}O$](images/delo_calibration_overview.png)
 See also [species-specific subplots with error bars](images/delo_calibration.png).
 
