@@ -25,7 +25,7 @@ See also [species-specific subplots with error bars](images/delo_calibration.png
 
 Even when using the Malevitch et al (2019) calibration dataset the "reverted" SST results are off with the hierarchical model, whereas the pooled model works both ways.
 ![reverted](/images/d18o_sst_pooled_vs_hierarchical.png)
-![forward](/images/d18o_sst_pooled_vs_hierarchical.png)
+![forward](/images/d18o_pooled_vs_hierarchical.png)
 
 The calibration and the last two plots is done in [this notebook](/notebooks/bayesian_calibration_examples.ipynb) adapted from [this companion repo from Malevitch et al](https://github.com/brews/d18oc_sst). The re-use as "reverted" model is done [here](/lgmproxies/datasets/tierney.py). That's the most likely place to search for any issue, but I failed to see any.
 
